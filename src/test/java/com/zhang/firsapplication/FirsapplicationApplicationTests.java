@@ -13,14 +13,9 @@ import java.sql.SQLException;
 @SpringBootTest
 public class FirsapplicationApplicationTests {
 
-    @Autowired
-    DataSource dataSource;
-
     @Test
-    public void contextLoads() throws SQLException {
+    public void contextLoads() {
 
-        System.out.println(dataSource.getClass());
-        System.out.println(dataSource.getConnection());
     }
 
 
