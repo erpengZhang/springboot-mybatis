@@ -2,7 +2,8 @@ package com.zhang.firsapplication;
 
 import com.zhang.firsapplication.bean.User;
 import com.zhang.firsapplication.dao.UserMapper;
-import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.cache.annotation.EnableCaching;
+import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableCaching
 @EnableSwagger2
 @SpringBootApplication
 @MapperScan("com.zhang.firsapplication.dao")

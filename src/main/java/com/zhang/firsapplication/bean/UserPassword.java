@@ -1,5 +1,13 @@
 package com.zhang.firsapplication.bean;
 
+import tk.mybatis.mapper.annotation.KeySql;
+import tk.mybatis.mapper.code.ORDER;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Table(name = "USER_PASSWORD")
 public class UserPassword {
     /**
      *
@@ -8,6 +16,9 @@ public class UserPassword {
      *
      * @mbg.generated Mon Jan 28 16:41:50 CST 2019
      */
+    @Id
+    @KeySql(sql = "SELECT REPLACE(uuid(),'-','')", order = ORDER.BEFORE)
+    @Column(name = "ID", unique = true, nullable = false, length = 32)
     private String id;
 
     /**
@@ -17,6 +28,7 @@ public class UserPassword {
      *
      * @mbg.generated Mon Jan 28 16:41:50 CST 2019
      */
+    @Column(name = "USER_PASSWORD")
     private String userPassword;
 
     /**

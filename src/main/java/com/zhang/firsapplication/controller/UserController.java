@@ -2,10 +2,10 @@ package com.zhang.firsapplication.controller;
 
 import com.alibaba.druid.stat.DruidStatManagerFacade;
 import com.zhang.firsapplication.bean.User;
-import com.zhang.firsapplication.bean.UserExample;
 import com.zhang.firsapplication.dao.UserMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +24,10 @@ public class UserController {
     }
 
     @GetMapping("/user")
+    @Cacheable(cacheNames = {"user"})
     public Object get(User user){
-        UserExample userExample = new UserExample();
-        UserExample.Criteria criteria = userExample.createCriteria();
-        criteria.andSexEqualTo("nn");
-        return userMapper.selectByExample(userExample);
+
+        return userMapper.select(user);
     }
 
     @GetMapping("/druid/stat")
