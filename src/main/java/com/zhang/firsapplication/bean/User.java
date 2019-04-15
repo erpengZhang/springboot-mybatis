@@ -160,4 +160,15 @@ public class User implements Serializable {
     public void setPasswordId(String passwordId) {
         this.passwordId = passwordId;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", passwordId='" + passwordId + '\'' +
+                '}';
+    }
 }

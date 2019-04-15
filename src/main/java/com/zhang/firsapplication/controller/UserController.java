@@ -5,9 +5,11 @@ import com.zhang.firsapplication.bean.User;
 import com.zhang.firsapplication.dao.UserMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -25,9 +27,17 @@ public class UserController {
 
     @GetMapping("/user")
     @Cacheable(cacheNames = {"user"})
-    public Object get(User user){
+    public User get(String id){
+        User user = userMapper.selectByPrimaryKey(id);
+//       redisCacheManager.
+        return user;
+    }
 
-        return userMapper.select(user);
+    @PutMapping("/user")
+    @CachePut(cacheNames = {"user"}, key = "#p0.id")
+    public User update(User user){
+        int i = userMapper.updateByPrimaryKeySelective(user);
+        return userMapper.selectByPrimaryKey(user.getId());
     }
 
     @GetMapping("/druid/stat")
