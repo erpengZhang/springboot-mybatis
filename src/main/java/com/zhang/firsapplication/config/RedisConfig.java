@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
 @Configuration
-public class redisConfig {
+public class RedisConfig {
 
     @Bean
     public KeyGenerator wiselyKeyGenerator() {

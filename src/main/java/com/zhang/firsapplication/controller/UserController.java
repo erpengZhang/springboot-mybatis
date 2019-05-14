@@ -5,39 +5,50 @@ import com.zhang.firsapplication.bean.User;
 import com.zhang.firsapplication.dao.UserMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 public class UserController {
 
+    private final UserMapper userMapper;
+
     @Autowired
-    private UserMapper userMapper;
+    public UserController(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     @ApiOperation(value = "添加用户", notes = "添加用户")
     @PostMapping("/user")
-    public Object add(User user){
-        return userMapper.insertSelective(user);
+    //@Cacheable(cacheNames = "user", key = "#p0.id")
+    public User add(User user){
+        userMapper.insertSelective(user);
+        return user;
     }
 
     @GetMapping("/user")
     @Cacheable(cacheNames = {"user"})
     public User get(String id){
-        User user = userMapper.selectByPrimaryKey(id);
+        //User user = userMapper.selectByPrimaryKey(id);
 //       redisCacheManager.
-        return user;
+        return  userMapper.selectByPrimaryKey(id);
     }
 
     @PutMapping("/user")
     @CachePut(cacheNames = {"user"}, key = "#p0.id")
     public User update(User user){
-        int i = userMapper.updateByPrimaryKeySelective(user);
+        userMapper.updateByPrimaryKeySelective(user);
         return userMapper.selectByPrimaryKey(user.getId());
+    }
+
+    @CacheEvict(cacheNames = "user", key = "#p0.id")
+    @DeleteMapping("/user")
+    public User detele(User user){
+        userMapper.delete(user);
+        return user;
     }
 
     @GetMapping("/druid/stat")
