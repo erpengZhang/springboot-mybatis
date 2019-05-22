@@ -10,7 +10,9 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
-
+/**
+ * @author Administrator
+ */
 @RestController
 public class UserController {
 
@@ -23,7 +25,6 @@ public class UserController {
 
     @ApiOperation(value = "添加用户", notes = "添加用户")
     @PostMapping("/user")
-    //@Cacheable(cacheNames = "user", key = "#p0.id")
     public User add(User user){
         userMapper.insertSelective(user);
         return user;
@@ -32,8 +33,6 @@ public class UserController {
     @GetMapping("/user")
     @Cacheable(cacheNames = {"user"})
     public User get(String id){
-        //User user = userMapper.selectByPrimaryKey(id);
-//       redisCacheManager.
         return  userMapper.selectByPrimaryKey(id);
     }
 
@@ -46,7 +45,7 @@ public class UserController {
 
     @CacheEvict(cacheNames = "user", key = "#p0.id")
     @DeleteMapping("/user")
-    public User detele(User user){
+    public User delete(User user){
         userMapper.delete(user);
         return user;
     }
