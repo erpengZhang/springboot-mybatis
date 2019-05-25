@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @ApiModel("用户信息")
 @Table(name = "USER")
@@ -53,6 +54,9 @@ public class User implements Serializable {
      */
     @Column(name = "SEX")
     private String sex;
+
+    @Column(name = "AGE")
+    private BigDecimal age;
 
     @Column(name = "PASSWORD_ID")
     private String passwordId;
@@ -159,6 +163,14 @@ public class User implements Serializable {
 
     public void setPasswordId(String passwordId) {
         this.passwordId = passwordId;
+    }
+
+    public BigDecimal getAge() {
+        return age;
+    }
+
+    public void setAge(BigDecimal age) {
+        this.age = age;
     }
 
     @Override
