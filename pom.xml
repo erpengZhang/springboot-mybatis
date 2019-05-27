@@ -74,7 +74,7 @@
 
         <!-- https://mvnrepository.com/artifact/org.csource/fastdfs-client-java -->
         <dependency>
-            <groupId>org.csource</groupId>
+            <groupId>com.github.penggle</groupId>
             <artifactId>fastdfs-client-java</artifactId>
             <version>1.27</version>
         </dependency>
