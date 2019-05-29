@@ -2,7 +2,8 @@ package com.zhang.firsapplication.controller;
 
 import com.zhang.firsapplication.fastfds.FastDFSClient;
 import com.zhang.firsapplication.fastfds.FastDFSFile;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,7 @@ import java.io.InputStream;
 @Controller
 public class UploadFileController {
 
-    private final org.apache.log4j.Logger log = Logger.getLogger(UploadFileController.class);
+    private static final Logger log = LoggerFactory.getLogger(UploadFileController.class);
 
     @PostMapping("/file_upload")
     public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {

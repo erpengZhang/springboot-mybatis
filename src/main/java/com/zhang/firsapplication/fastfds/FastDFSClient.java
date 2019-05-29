@@ -1,12 +1,13 @@
 package com.zhang.firsapplication.fastfds;
 
-import org.apache.log4j.Logger;
 import org.csource.common.NameValuePair;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.FileInfo;
 import org.csource.fastdfs.StorageClient;
 import org.csource.fastdfs.TrackerClient;
 import org.csource.fastdfs.TrackerServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayInputStream;
@@ -19,7 +20,7 @@ import java.io.InputStream;
  */
 public class FastDFSClient {
 
-    private static final Logger log = Logger.getLogger(FastDFSClient.class);
+    private static final Logger log = LoggerFactory.getLogger(FastDFSClient.class);
 
     static {
         try {
