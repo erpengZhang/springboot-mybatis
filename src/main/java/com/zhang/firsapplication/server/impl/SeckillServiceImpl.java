@@ -15,10 +15,12 @@ import com.zhang.firsapplication.server.SeckillService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -33,8 +35,6 @@ public class SeckillServiceImpl implements SeckillService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    //设置盐值字符串，随便定义，用于混淆MD5值
-    private final String salt = "sjajaspu-i-2jrfm;sd";
     //设置秒杀redis缓存的key
     private final String key = "seckill";
 
@@ -49,14 +49,17 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Override
     public List<Seckill> findAll() {
-        List<Seckill> seckillList = redisTemplate.boundHashOps("seckill").values();
+        //List<Seckill> seckillList = redisTemplate.boundHashOps("seckill").values();
+        HashOperations hashOperations = redisTemplate.opsForHash();
+        List<Seckill> seckillList = hashOperations.values("seckill");
         if (seckillList == null || seckillList.size() == 0){
             //说明缓存中没有秒杀列表数据
             //查询数据库中秒杀列表数据，并将列表数据循环放入redis缓存中
             seckillList = seckillMapper.selectAll();
             for (Seckill seckill : seckillList){
                 //将秒杀列表数据依次放入redis缓存中，key:秒杀表的ID值；value:秒杀商品数据
-                redisTemplate.boundHashOps(key).put(seckill.getSeckillId(), seckill);
+//                redisTemplate.boundHashOps(key).put(seckill.getSeckillId(), seckill);
+                hashOperations.put(key, ObjectUtils.nullSafeToString(seckill.getSeckillId()),seckill);
                 logger.info("findAll -> 从数据库中读取放入缓存中");
             }
         }else{
@@ -72,7 +75,7 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Override
     public Exposer exportSeckillUrl(long seckillId) {
-        Seckill seckill = (Seckill) redisTemplate.boundHashOps(key).get(String.valueOf(seckillId));
+        Seckill seckill = (Seckill) redisTemplate.boundHashOps(key).get(seckillId);
         if (seckill == null) {
             //说明redis缓存中没有此key对应的value
             //查询数据库，并将数据放入缓存中
@@ -83,10 +86,10 @@ public class SeckillServiceImpl implements SeckillService {
             } else {
                 //查询到了，存入redis缓存中。 key:秒杀表的ID值； value:秒杀表数据
                 redisTemplate.boundHashOps(key).put(seckill.getSeckillId(), seckill);
-                logger.info("RedisTemplate -> 从数据库中读取并放入缓存中");
+                logger.info("exportSeckillUrl -> 从数据库中读取并放入缓存中");
             }
         } else {
-            logger.info("RedisTemplate -> 从缓存中读取");
+            logger.info("exportSeckillUrl -> 从缓存中读取");
         }
         Date startTime = seckill.getStartTime();
         Date endTime = seckill.getEndTime();
@@ -102,6 +105,8 @@ public class SeckillServiceImpl implements SeckillService {
 
     //生成MD5值
     private String getMD5(Long seckillId) {
+        //设置盐值字符串，随便定义，用于混淆MD5值
+        String salt = "sjajaspu-i-2jrfm;sd";
         String base = seckillId + "/" + salt;
         return DigestUtils.md5DigestAsHex(base.getBytes());
     }
